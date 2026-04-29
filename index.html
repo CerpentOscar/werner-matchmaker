@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Werner Matchmaker</title>
+  <meta name="description" content="A clean, adult-only dating app concept with age filters, profile prompts, and safety-first matching." />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: rgba(255,255,255,0.08);
+      --panel-2: rgba(255,255,255,0.12);
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #fb7185;
+      --accent-2: #38bdf8;
+      --line: rgba(255,255,255,0.12);
+      --good: #34d399;
+      --warn: #fbbf24;
+      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(251,113,133,0.25), transparent 30%),
+        radial-gradient(circle at top right, rgba(56,189,248,0.22), transparent 28%),
+        var(--bg);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    .hero {
+      display: grid; gap: 20px; grid-template-columns: 1.2fr .8fr; align-items: stretch;
+      margin-top: 10px;
+    }
+    @media (max-width: 900px){ .hero { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+    .pad { padding: 24px; }
+    .eyebrow { color: var(--accent-2); text-transform: uppercase; letter-spacing: .14em; font-size: .78rem; font-weight: 700; }
+    h1 { margin: 10px 0 12px; font-size: clamp(2.2rem, 5vw, 4.5rem); line-height: .95; }
+    p { line-height: 1.55; color: var(--muted); }
+    .hero p { max-width: 58ch; }
+    .actions { display:flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+    .btn {
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding: 12px 16px; border-radius: 14px; border: 1px solid var(--line);
+      color: var(--text); text-decoration: none; font-weight: 700; background: var(--panel-2);
+    }
+    .btn.primary { background: linear-gradient(135deg, var(--accent), #ec4899); border-color: transparent; }
+    .stats { display:grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 22px; }
+    .stat { padding: 16px; border-radius: 18px; background: rgba(15,23,42,0.4); border: 1px solid var(--line); }
+    .stat strong { display:block; font-size: 1.35rem; }
+    .stat span { color: var(--muted); font-size: .92rem; }
+    .panel-title { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom: 14px; }
+    .badge { padding: 6px 10px; border-radius: 999px; font-size: .78rem; font-weight: 700; background: rgba(52,211,153,0.14); color: var(--good); border: 1px solid rgba(52,211,153,0.25); }
+    .filters { display:grid; gap: 14px; margin-top: 14px; }
+    .control { display:grid; gap: 8px; }
+    label { font-size: .92rem; color: #dbeafe; font-weight: 600; }
+    input[type="range"], select { width: 100%; }
+    select, .toggle {
+      background: rgba(15,23,42,0.55); color: var(--text); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px;
+    }
+    .chips { display:flex; flex-wrap:wrap; gap:8px; }
+    .chip { border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,0.05); padding: 8px 12px; color: var(--text); font-size: .88rem; }
+    .chip.active { background: rgba(251,113,133,0.18); border-color: rgba(251,113,133,0.35); }
+    .section { margin-top: 20px; display:grid; gap: 20px; grid-template-columns: 1fr 1fr; }
+    @media (max-width: 900px){ .section { grid-template-columns: 1fr; } }
+    .list { display:grid; gap: 12px; }
+    .profile {
+      display:grid; grid-template-columns: 96px 1fr; gap: 14px; align-items: center;
+      padding: 16px; border-radius: 18px; border: 1px solid var(--line); background: rgba(255,255,255,0.05);
+    }
+    .avatar {
+      width: 96px; height: 96px; border-radius: 22px; display:grid; place-items:center; font-size: 2rem;
+      background: linear-gradient(135deg, rgba(251,113,133,0.45), rgba(56,189,248,0.35));
+    }
+    .profile h3 { margin: 0 0 6px; }
+    .meta { color: var(--muted); font-size: .92rem; margin-bottom: 8px; }
+    .prompt { color: #f8fafc; font-size: .95rem; }
+    .pillrow { display:flex; flex-wrap:wrap; gap:8px; margin-top: 10px; }
+    .pill { font-size:.78rem; padding:5px 10px; border-radius:999px; background: rgba(255,255,255,0.06); border: 1px solid var(--line); color: #dbeafe; }
+    .footer { margin: 24px 0 8px; color: var(--muted); font-size: .9rem; text-align:center; }
+    .note { color: var(--warn); font-weight: 600; }
+    .bar { height: 10px; border-radius: 999px; background: rgba(255,255,255,0.1); overflow:hidden; }
+    .bar > i { display:block; height:100%; width: 68%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+    .tiny { font-size:.82rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <section class="card pad">
+        <div class="eyebrow">Adult-only dating app concept</div>
+        <h1>Werner Matchmaker</h1>
+        <p>
+          A Tinder-style matching app for adults 22+ with age filters, interest-led prompts, and a safer
+          approach to meeting people in their 30s and 40s.
+        </p>
+        <div class="actions">
+          <a class="btn primary" href="#matches">Browse matches</a>
+          <a class="btn" href="#filters">Set preferences</a>
+        </div>
+        <div class="stats">
+          <div class="stat"><strong>22+</strong><span>hard age gate</span></div>
+          <div class="stat"><strong>30s–40s</strong><span>preferred range</span></div>
+          <div class="stat"><strong>Safe</strong><span>report & block first</span></div>
+        </div>
+      </section>
+
+      <aside class="card pad" id="filters">
+        <div class="panel-title">
+          <strong>Preferences</strong>
+          <span class="badge">Live demo</span>
+        </div>
+        <div class="filters">
+          <div class="control">
+            <label for="age">Preferred age range</label>
+            <input id="age" type="range" min="22" max="49" value="36" />
+            <div class="tiny">Target: <span id="ageLabel">30s</span></div>
+          </div>
+          <div class="control">
+            <label for="distance">Distance</label>
+            <select id="distance">
+              <option>5 km</option>
+              <option selected>25 km</option>
+              <option>50 km</option>
+            </select>
+          </div>
+          <div class="control">
+            <label>What matters</label>
+            <div class="chips" id="chips">
+              <span class="chip active">Kind</span>
+              <span class="chip active">Funny</span>
+              <span class="chip">Family-minded</span>
+              <span class="chip active">Active</span>
+              <span class="chip">Art / culture</span>
+              <span class="chip">Travel</span>
+            </div>
+          </div>
+          <div class="bar"><i></i></div>
+          <div class="note">No photo-rating nonsense. Just filters, prompts, and consent.</div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="section" id="matches">
+      <section class="card pad">
+        <div class="panel-title"><strong>Suggested profiles</strong><span class="badge">Age-appropriate</span></div>
+        <div class="list">
+          <div class="profile">
+            <div class="avatar">A</div>
+            <div>
+              <h3>Amanda, 34</h3>
+              <div class="meta">Johannesburg · 18 km away · Marketing lead</div>
+              <div class="prompt">“Good banter, decent coffee, and zero drama.”</div>
+              <div class="pillrow"><span class="pill">Hiking</span><span class="pill">Wine bars</span><span class="pill">Dogs</span></div>
+            </div>
+          </div>
+          <div class="profile">
+            <div class="avatar">L</div>
+            <div>
+              <h3>Leanne, 41</h3>
+              <div class="meta">Cape Town · 31 km away · Architect</div>
+              <div class="prompt">“Prefer conversation over swiping. Looking for someone steady.”</div>
+              <div class="pillrow"><span class="pill">Design</span><span class="pill">Live music</span><span class="pill">Road trips</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card pad">
+        <div class="panel-title"><strong>Profile builder</strong><span class="badge">Tinder-style</span></div>
+        <p class="tiny">Use sharp, honest prompts instead of the usual swamp of nothingness.</p>
+        <div class="list">
+          <div class="profile">
+            <div class="avatar">W</div>
+            <div>
+              <h3>Werner</h3>
+              <div class="meta">Verified adult · Seeking women 30s–40s · Open to 22+ only</div>
+              <div class="prompt">Prompt: “My ideal first date is…”</div>
+              <div class="prompt">Answer: “Coffee, a walk, and a reason to keep talking.”</div>
+              <div class="pillrow"><span class="pill">Verified</span><span class="pill">Clear intentions</span><span class="pill">Respectful</span></div>
+            </div>
+          </div>
+          <div class="profile">
+            <div class="avatar">+</div>
+            <div>
+              <h3>Safety tools</h3>
+              <div class="meta">Block, report, verify, and meet in public first.</div>
+              <div class="prompt">Built for real people, not weird fantasy portraits.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">Werner Matchmaker · private MVP · adults only</div>
+  </div>
+
+  <script>
+    const age = document.getElementById('age');
+    const ageLabel = document.getElementById('ageLabel');
+    const labelFor = v => v < 30 ? 'late 20s' : v < 40 ? '30s' : '40s';
+    const update = () => ageLabel.textContent = labelFor(Number(age.value));
+    age.addEventListener('input', update);
+    update();
+
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => chip.classList.toggle('active'));
+    });
+  </script>
+</body>
+</html>
